@@ -1,0 +1,21 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+# vi: set nu :
+
+PROJECT_NAME = "firebird25sc"
+
+Vagrant.configure(2) do |config|
+  #
+  # Postgres
+  config.vm.define 'firebird' do |firebird|
+    firebird.vm.provider 'docker' do |docker|
+      docker.image = "jacobalberty/firebird"
+      docker.name = PROJECT_NAME
+      docker.ports = ["3050:3050"]
+      # docker.env = {
+      #   ISC_USER: "sysdba",
+      #   ISC_PASSWD: "123",
+      # }
+    end
+  end
+end

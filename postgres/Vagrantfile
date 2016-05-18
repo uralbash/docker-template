@@ -1,0 +1,22 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+# vi: set nu :
+
+PROJECT_NAME = "postgres95"
+
+Vagrant.configure(2) do |config|
+  #
+  # Postgres
+  config.vm.define 'postgres' do |postgres|
+    postgres.vm.provider 'docker' do |docker|
+      docker.image = "postgres:9.5"
+      docker.name = PROJECT_NAME
+      docker.ports = ["5432:5432"]
+      docker.build_args = ["postgresql.conf:/var/lib/postgresql/data/postgresql.conf"]
+      docker.env = {
+        USER: "postgres",
+        PASS: "postgres",
+      }
+    end
+  end
+end
