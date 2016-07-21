@@ -1,2 +1,3 @@
-Databases in Docker with Vagrant
-================================
+Docker images for Vagrant
+=========================
+
