@@ -3,7 +3,6 @@
 # VERSION               0.0.1
 # vi: set ft=dockerfile :
 
-# FROM centos:centos6
 FROM toopher/centos-i386:centos6
 MAINTAINER Dmitry Svintsov <root@uralbash.ru>
 
@@ -104,5 +103,9 @@ RUN PATH=/opt/gcc-4.8.2/bin/:$PATH \
 RUN make install
 RUN make clean
 
-EXPOSE 22
+## Run sshd
 CMD ["/usr/sbin/sshd", "-D"]
+EXPOSE 22
+
+ONBUILD CMD ["/usr/sbin/sshd", "-D"]
+ONBUILD EXPOSE 22
