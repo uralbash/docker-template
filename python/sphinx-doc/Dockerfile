@@ -44,3 +44,6 @@ RUN apt-get clean
 ## Run sshd
 CMD ["/usr/sbin/sshd", "-D"]
 EXPOSE 22
+
+ONBUILD CMD ["/usr/sbin/sshd", "-D"]
+ONBUILD EXPOSE 22
