@@ -1,0 +1,43 @@
+#!/usr/bin/env ruby
+#
+# Vagrantfile
+# Copyright (C) 2016 uralbash <root@uralbash.ru>
+#
+# Distributed under terms of the MIT license.
+#
+
+VAGRANTFILE_API_VERSION = "2"
+PROJECT_NAME = 'centos6-i386-qt5-example'
+
+Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
+
+  # Source
+  config.vm.synced_folder "./app/", "/home/vagrant/app/",
+    :mount_options => ["dmode=777","fmode=666"],
+    :owner => "vagrant", :group => "vagrant"
+
+  # CentOS 6 container
+  config.vm.define 'centos', primary: true do |clock|
+
+    clock.ssh.pty = true
+    clock.ssh.port = 22
+    clock.ssh.username = 'vagrant'
+    clock.ssh.password = '123'
+
+    clock.vm.provision :shell, privileged: false,
+      :path => "build-app.sh"
+
+    clock.vm.provider 'docker' do |docker|
+      docker.name = PROJECT_NAME
+      docker.build_dir = '../'
+      docker.build_args = ['--tag=%s' % PROJECT_NAME]
+      docker.remains_running = false
+      docker.create_args = [
+        '-i', # Keep stdin open (so we can interact with it)
+        '-t', # Allocate a (pseudo) ttys
+      ]
+      docker.has_ssh = true
+    end
+  end
+
+end

@@ -77,16 +77,50 @@ RUN /this.py && yum -y install libxcb libxcb-devel xcb-util xcb-util-devel
 RUN /this.py && yum -y install freetype-devel
 RUN /this.py && yum -y install fontconfig-devel
 
+## Nix
+RUN yum install -y perl-Digest-SHA
+# Nix requires ownership of /nix.
+RUN mkdir -m 0755 /nix && chown ${HOME_USER} /nix
+# Change docker user to vagrant
+USER ${HOME_USER}
+# Set some environment variables for Docker and Nix
+ENV USER ${HOME_USER}
+# Change our working directory to $HOME
+WORKDIR /home/${HOME_USER}
+# install Nix
+RUN curl https://nixos.org/nix/install | sh
+# update the nix channels
+# Note: nix.sh sets some environment variables. Unfortunately in
+# Docker environment variables don't persist across `RUN` commands
+# without using Docker's own `ENV` command, so we need to prefix
+# our nix commands with `. .nix-profile/etc/profile.d/nix.sh` to
+# ensure nix manages our $PATH appropriately.
+RUN . .nix-profile/etc/profile.d/nix.sh && \
+    nix-channel --update
+# Install packages.
+RUN . .nix-profile/etc/profile.d/nix.sh && \
+    nix-env -i git
+
+USER root
+RUN yum -y remove git
+RUN ln -s /home/vagrant/.nix-profile/bin/git /usr/bin/git
+
 ## Qt5
 WORKDIR /tmp
-RUN tar xvzf qt-everywhere-opensource-src-5.7.0.tar.gz
-WORKDIR /tmp/qt-everywhere-opensource-src-5.7.0
 
+RUN yum install -y mesa-libGL-devel
+RUN git clone git://code.qt.io/qt/qt5.git
+
+RUN cd qt5 \
+        && git checkout v5.7.0 \
+        && perl init-repository
+
+WORKDIR /tmp/qt5
 RUN PATH=/opt/gcc-4.8.2/bin/:$PATH \
     ./configure \
     --prefix=/opt/Qt-5.7/ \
     -static \
-    -release \
+    -debug-and-release \
     -opensource \
     -confirm-license \
     -nomake examples \
@@ -94,7 +128,6 @@ RUN PATH=/opt/gcc-4.8.2/bin/:$PATH \
     -no-compile-examples \
     -skip qtgamepad \
     -skip qtvirtualkeyboard \
-    -skip declarative \
     -qt-xcb \
     -fontconfig
 
