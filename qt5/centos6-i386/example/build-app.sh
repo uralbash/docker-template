@@ -11,9 +11,8 @@ PROJECT_PATH=/home/vagrant/app
 
 # build Qt project
 cd ~/app \
-    && \
-    PATH=/opt/gcc-4.8.2/bin/:/opt/Qt-5.7/bin/:$PATH \
+    && make clean \
+    && PATH=/opt/gcc-4.8.2/bin/:/opt/Qt-5.7/bin/:$PATH \
     qmake \
-    && \
-    PATH=/opt/gcc-4.8.2/bin/:/opt/Qt-5.7/bin/:$PATH \
+    && PATH=/opt/gcc-4.8.2/bin/:/opt/Qt-5.7/bin/:$PATH \
     make
