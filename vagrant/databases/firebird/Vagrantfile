@@ -19,7 +19,7 @@ Vagrant.configure(2) do |config|
       docker.name = PROJECT_NAME
       docker.ports = ["3050:3050", "3060:3060"]
       docker.create_args = [
-        '--volume="%s:/var/firebird/etc/firebird.conf"' % fileConfig
+        '--volume=%s:/var/firebird/etc/firebird.conf' % fileConfig
       ]
       # docker.env = {
       #   ISC_USER: "sysdba",
