@@ -18,6 +18,9 @@ Vagrant.configure(2) do |config|
       docker.build_args = [
           "postgresql.conf:/var/lib/postgresql/data/postgresql.conf"
       ]
+      docker.create_args = [
+          '--volume=/etc/localtime:/etc/localtime:ro'
+      ]
       docker.env = auth
     end
   end
@@ -30,6 +33,9 @@ Vagrant.configure(2) do |config|
       docker.ports = ["5432:5432"]
       docker.build_args = [
           "postgresql.conf:/var/lib/postgresql/data/postgresql.conf"
+      ]
+      docker.create_args = [
+          '--volume=/etc/localtime:/etc/localtime:ro'
       ]
       docker.env = auth
     end
