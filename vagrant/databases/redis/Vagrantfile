@@ -1,0 +1,20 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+# vi: set nu :
+
+PROJECT_NAME = "redis"
+
+Vagrant.configure(2) do |config|
+
+  config.vm.define 'redis' do |redis|
+    redis.vm.provider 'docker' do |docker|
+      docker.image = "redis"
+      docker.name = PROJECT_NAME
+      docker.ports = ["6379:6379"] 
+      docker.create_args = [
+        '--volume=/etc/localtime:/etc/localtime:ro'
+      ]
+    end
+  end
+
+end

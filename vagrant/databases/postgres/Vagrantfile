@@ -9,18 +9,21 @@ Vagrant.configure(2) do |config|
       PASS: "postgres",
   }
 
+  build_args = [
+      "postgresql.conf:/var/lib/postgresql/data/postgresql.conf"
+  ]
+  create_args = [
+      '--volume=/etc/localtime:/etc/localtime:ro'
+  ]
+
   # Postgres 9.5
   config.vm.define 'postgres95' do |postgres|
     postgres.vm.provider 'docker' do |docker|
       docker.image = "postgres:9.5"
       docker.name = 'postgres95'
-      docker.ports = ["5432:5432"]
-      docker.build_args = [
-          "postgresql.conf:/var/lib/postgresql/data/postgresql.conf"
-      ]
-      docker.create_args = [
-          '--volume=/etc/localtime:/etc/localtime:ro'
-      ]
+      docker.ports = ["5433:5433"]
+      docker.build_args = build_args
+      docker.create_args = create_args
       docker.env = auth
     end
   end
@@ -31,12 +34,8 @@ Vagrant.configure(2) do |config|
       docker.image = "postgres:9.6"
       docker.name = 'postgres96'
       docker.ports = ["5432:5432"]
-      docker.build_args = [
-          "postgresql.conf:/var/lib/postgresql/data/postgresql.conf"
-      ]
-      docker.create_args = [
-          '--volume=/etc/localtime:/etc/localtime:ro'
-      ]
+      docker.build_args = build_args
+      docker.create_args = create_args
       docker.env = auth
     end
   end
