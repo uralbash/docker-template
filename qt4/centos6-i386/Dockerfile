@@ -63,7 +63,6 @@ RUN /this.py && yum install -y libXt-devel
 
 ## Downloads
 RUN wget http://mirror.tochlab.net/pub/gnu/gcc/gcc-4.8.2/gcc-4.8.2.tar.gz && tar xvzf gcc-4.8.2.tar.gz && rm gcc-4.8.2.tar.gz
-RUN wget http://download.qt.io/official_releases/qt/5.7/5.7.0/single/qt-everywhere-opensource-src-5.7.0.tar.gz
 
 ## C++11
 RUN /this.py && yum groupinstall "Development Tools" -yyy
