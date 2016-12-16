@@ -88,33 +88,33 @@ RUN wget -qO- \
       https://download.qt.io/archive/qt/4.8/4.8.6/qt-everywhere-opensource-src-4.8.6.tar.gz | tar xvz
 
 WORKDIR qt-everywhere-opensource-src-4.8.6
-RUN PATH=/opt/gcc-4.8.2/bin/:$PATH  \
-    ./configure -platform linux-g++ -v \
-        -prefix /opt/Qt-4.8/ \
-        -release \
-        -static \
-        -fontconfig \
-        -opensource \
-        -confirm-license \
-        -gtkstyle \
-        -no-webkit \
-        -nomake demos \
-        -nomake examples \
-        -no-libjpeg \
-        -no-cups \
-        -no-openvg \
-        -no-libmng \
-        -no-gif \
-        -qt-libpng \
-        -no-libtiff \
-        -no-accessibility \
-        -no-phonon \
-        -no-script \
-        -no-declarative \
-        -no-declarative-debug \
-        -no-openssl \
-        -no-qt3support \
-        -no-scripttools \
+RUN PATH=/opt/gcc-4.8.2/bin/:$PATH      \
+    ./configure -platform linux-g++ -v  \
+        -prefix /opt/Qt-4.8/            \
+        -release                        \
+        -static                         \
+        -fontconfig                     \
+        -opensource                     \
+        -confirm-license                \
+        -gtkstyle                       \
+        -no-webkit                      \
+        -nomake demos                   \
+        -nomake examples                \
+        -no-libjpeg                     \
+        -no-cups                        \
+        -no-openvg                      \
+        -no-libmng                      \
+        -no-gif                         \
+        -qt-libpng                      \
+        -no-libtiff                     \
+        -no-accessibility               \
+        -no-phonon                      \
+        -no-script                      \
+        -no-declarative                 \
+        -no-declarative-debug           \
+        -no-openssl                     \
+        -no-qt3support                  \
+        -no-scripttools                 \
         -no-exceptions
 RUN PATH=/opt/gcc-4.8.2/bin/:$PATH  \
     make -j4
