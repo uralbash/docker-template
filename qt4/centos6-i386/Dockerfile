@@ -63,7 +63,6 @@ RUN /this.py && yum install -y libXt-devel
 
 ## Downloads
 RUN wget http://mirror.tochlab.net/pub/gnu/gcc/gcc-4.8.2/gcc-4.8.2.tar.gz && tar xvzf gcc-4.8.2.tar.gz && rm gcc-4.8.2.tar.gz
-RUN wget http://download.qt.io/official_releases/qt/5.7/5.7.0/single/qt-everywhere-opensource-src-5.7.0.tar.gz
 
 ## C++11
 RUN /this.py && yum groupinstall "Development Tools" -yyy
@@ -89,33 +88,33 @@ RUN wget -qO- \
       https://download.qt.io/archive/qt/4.8/4.8.6/qt-everywhere-opensource-src-4.8.6.tar.gz | tar xvz
 
 WORKDIR qt-everywhere-opensource-src-4.8.6
-RUN PATH=/opt/gcc-4.8.2/bin/:$PATH  \
-    ./configure -platform linux-g++ -v \
-        -prefix /opt/Qt-4.8/ \
-        -release \
-        -static \
-        -fontconfig \
-        -opensource \
-        -confirm-license \
-        -gtkstyle \
-        -no-webkit \
-        -nomake demos \
-        -nomake examples \
-        -no-libjpeg \
-        -no-cups \
-        -no-openvg \
-        -no-libmng \
-        -no-gif \
-        -qt-libpng \
-        -no-libtiff \
-        -no-accessibility \
-        -no-phonon \
-        -no-script \
-        -no-declarative \
-        -no-declarative-debug \
-        -no-openssl \
-        -no-qt3support \
-        -no-scripttools \
+RUN PATH=/opt/gcc-4.8.2/bin/:$PATH      \
+    ./configure -platform linux-g++ -v  \
+        -prefix /opt/Qt-4.8/            \
+        -release                        \
+        -static                         \
+        -fontconfig                     \
+        -opensource                     \
+        -confirm-license                \
+        -gtkstyle                       \
+        -no-webkit                      \
+        -nomake demos                   \
+        -nomake examples                \
+        -no-libjpeg                     \
+        -no-cups                        \
+        -no-openvg                      \
+        -no-libmng                      \
+        -no-gif                         \
+        -qt-libpng                      \
+        -no-libtiff                     \
+        -no-accessibility               \
+        -no-phonon                      \
+        -no-script                      \
+        -no-declarative                 \
+        -no-declarative-debug           \
+        -no-openssl                     \
+        -no-qt3support                  \
+        -no-scripttools                 \
         -no-exceptions
 RUN PATH=/opt/gcc-4.8.2/bin/:$PATH  \
     make -j4

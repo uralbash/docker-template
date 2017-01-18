@@ -89,10 +89,11 @@ RUN ln -s /home/vagrant/.nix-profile/bin/git /usr/bin/git
 WORKDIR /tmp
 
 RUN yum install -y mesa-libGL-devel
+RUN rm -rf qt5
 RUN git clone git://code.qt.io/qt/qt5.git
 
 RUN cd qt5 \
-        && git checkout v5.7.0 \
+        && git checkout 5.7 \
         && perl init-repository
 
 WORKDIR /tmp/qt5
@@ -108,7 +109,6 @@ RUN PATH=/opt/gcc-4.8.2/bin/:$PATH   \
     -nomake tests                    \
     -no-compile-examples             \
     -skip qtgamepad                  \
-    -skip qtvirtualkeyboard          \
     -qt-xcb                          \
     -fontconfig                      \
     -v
