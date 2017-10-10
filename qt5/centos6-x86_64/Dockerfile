@@ -1,4 +1,4 @@
-# CentOS6 x86_64 + Qt5
+# CentOS6 x86_64 + gcc + cpp11
 #
 # VERSION               0.0.1
 # vi: set ft=dockerfile :
@@ -8,6 +8,7 @@ MAINTAINER Dmitry Svintsov <root@uralbash.ru>
 
 ENV HOME_USER vagrant
 ENV HOME_PASS 123
+RUN echo "root:123" | chpasswd
 
 WORKDIR /tmp
 
@@ -43,7 +44,7 @@ RUN yum install bzip2 tar wget -yyy
 
 ## C++11
 RUN yum install -y centos-release-scl
-RUN yum install -y devtoolset-3-toolchain 
+RUN yum install -y devtoolset-3-toolchain
 RUN scl enable devtoolset-3 bash
 
 ## Xorg
@@ -84,42 +85,6 @@ RUN . .nix-profile/etc/profile.d/nix.sh && \
 USER root
 RUN yum -y remove git
 RUN ln -s /home/vagrant/.nix-profile/bin/git /usr/bin/git
-
-## Qt5
-WORKDIR /tmp
-
-RUN yum install -y mesa-libGL-devel
-RUN rm -rf qt5
-RUN git clone git://code.qt.io/qt/qt5.git
-
-RUN cd qt5 \
-        && git checkout 5.7 \
-        && perl init-repository
-
-WORKDIR /tmp/qt5
-RUN PATH=/opt/gcc-4.8.2/bin/:$PATH   \
-    . /opt/rh/devtoolset-3/enable && \
-    ./configure                      \
-    --prefix=/opt/Qt-5.7/            \
-    -static                          \
-    -release                         \
-    -opensource                      \
-    -confirm-license                 \
-    -nomake examples                 \
-    -nomake tests                    \
-    -no-compile-examples             \
-    -skip qtgamepad                  \
-    -qt-xcb                          \
-    -fontconfig                      \
-    -v
-
-RUN PATH=/opt/gcc-4.8.2/bin/:$PATH   \
-    . /opt/rh/devtoolset-3/enable && \
-    make -j4
-RUN . /opt/rh/devtoolset-3/enable && \
-    make install
-RUN . /opt/rh/devtoolset-3/enable && \
-    make clean
 
 ## Run sshd
 CMD ["/usr/sbin/sshd", "-D"]

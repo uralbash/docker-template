@@ -1,4 +1,4 @@
-# CentOS6 i386 + Qt5
+# CentOS6 i386 + C++11
 #
 # VERSION               0.0.1
 # vi: set ft=dockerfile :
@@ -23,6 +23,7 @@ ADD this.py /
 RUN chmod +x /this.py
 
 ## Install an SSH keys
+RUN /this.py && yum -y update
 RUN /this.py && yum -y install openssh-server openssh-clients
 
 RUN rm -f /etc/ssh/ssh_host_rsa_key
@@ -47,7 +48,6 @@ RUN /this.py && yum install bzip2 tar wget -yyy
 
 ## Downloads
 RUN wget http://mirror.tochlab.net/pub/gnu/gcc/gcc-4.8.2/gcc-4.8.2.tar.gz && tar xvzf gcc-4.8.2.tar.gz && rm gcc-4.8.2.tar.gz
-RUN wget http://download.qt.io/official_releases/qt/5.7/5.7.0/single/qt-everywhere-opensource-src-5.7.0.tar.gz
 
 ## C++11
 RUN /this.py && yum groupinstall "Development Tools" -yyy
@@ -58,7 +58,9 @@ RUN /this.py && yum install glibc-devel.i386 glibc-devel ibstdc++-devel.i386 -yy
 RUN cd /tmp/gcc-4.8.2 && ./contrib/download_prerequisites
 RUN mkdir -p /tmp/objdir
 WORKDIR /tmp/objdir
-RUN /tmp/gcc-4.8.2/configure --prefix=/opt/gcc-4.8.2 --build=i686-pc-linux-gnu "CFLAGS=-m32" "CXXFLAGS=-m32" "LDFLAGS=-m32"
+RUN /tmp/gcc-4.8.2/configure \
+      --prefix=/opt/gcc-4.8.2 \
+      --build=i686-pc-linux-gnu "CFLAGS=-m32" "CXXFLAGS=-m32" "LDFLAGS=-m32"
 RUN make -j4
 RUN make install
 
@@ -104,37 +106,6 @@ RUN . .nix-profile/etc/profile.d/nix.sh && \
 USER root
 RUN yum -y remove git
 RUN ln -s /home/vagrant/.nix-profile/bin/git /usr/bin/git
-
-## Qt5
-WORKDIR /tmp
-
-RUN yum install -y mesa-libGL-devel
-RUN git clone git://code.qt.io/qt/qt5.git
-
-RUN cd qt5 \
-        && git checkout v5.7.0 \
-        && perl init-repository
-
-WORKDIR /tmp/qt5
-RUN PATH=/opt/gcc-4.8.2/bin/:$PATH  \
-    ./configure                     \
-    --prefix=/opt/Qt-5.7/           \
-    -static                         \
-    -debug-and-release              \
-    -opensource                     \
-    -confirm-license                \
-    -nomake examples                \
-    -nomake tests                   \
-    -no-compile-examples            \
-    -skip qtgamepad                 \
-    -skip qtvirtualkeyboard         \
-    -qt-xcb                         \
-    -fontconfig
-
-RUN PATH=/opt/gcc-4.8.2/bin/:$PATH \
-    make -j4
-RUN make install
-RUN make clean
 
 ## Run sshd
 CMD ["/usr/sbin/sshd", "-D"]
