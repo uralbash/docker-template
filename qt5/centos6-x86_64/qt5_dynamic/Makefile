@@ -11,7 +11,7 @@ build:
 		.
 
 push:
-	docker push docker pull uralbash/centos6-x86_64-qt5-dynamic
+	docker push uralbash/centos6-x86_64-qt5-dynamic
 
 
 # vim:ft=make
