@@ -9,10 +9,11 @@ MAINTAINER Dmitry Svintsov <root@uralbash.ru>
 ## Qt5
 WORKDIR /var
 
+ENV QT_VERSION v5.9.2
 RUN rm -rf qt5
 RUN git clone git://code.qt.io/qt/qt5.git
 RUN cd qt5 \
-        && git checkout v5.9.1 \
+        && git checkout $QT_VERSION \
         && perl init-repository
 RUN yum install -y mesa-libGL-devel
 RUN yum install -y gstreamer-devel gstreamer-plugins-base-devel
@@ -20,28 +21,11 @@ RUN yum install -y gstreamer-devel gstreamer-plugins-base-devel
 ## FireBird
 RUN yum install -y epel-release
 RUN yum install -y firebird-libfbclient firebird-devel
-# RUN ln -s /usr/lib/libfbclient.so.2 /usr/lib/libfbclient.so
-# RUN yum install -y libtermcap-devel libstdc++-devel libtool ncurses-dev \
-#       libstdc++-devel libicu
-# RUN mkdir -p /opt/firebird/src
-# RUN chmod 777 -R /opt/firebird
-# USER ${HOME_USER}
-# RUN GIT_SSL_NO_VERIFY=true git clone https://github.com/FirebirdSQL/firebird.git /opt/firebird/src
-# RUN . /home/vagrant/.nix-profile/etc/profile.d/nix.sh && \
-#       \
-#       nix-env -i autoconf automake pkg-config
-# RUN PATH=/opt/gcc-4.8.2/bin/:$PATH \
-#     . /home/vagrant/.nix-profile/etc/profile.d/nix.sh && \
-#     cd /opt/firebird/src && \
-#     \
-#     ./autogen.sh --prefix=/opt/firebird --enable-debug=yes
 
 ## Build Qt
 WORKDIR /var/qt5
 
 RUN echo "DEFINES+=SQLITE_ENABLE_JSON1" >> qtbase/src/plugins/sqldrivers/sqlite/sqlite.pro
-# RUN echo "QMAKE_CFLAGS += \"-DSQLITE_ENABLE_JSON1\"" >> qtbase/mkspecs/linux-g++/qmake.conf
-# RUN echo "QMAKE_CXXFLAGS += \"-DSQLITE_ENABLE_JSON1\"" >> qtbase/mkspecs/linux-g++/qmake.conf
 
 RUN PATH=/opt/gcc-4.8.2/bin/:$PATH   \
     . /opt/rh/devtoolset-3/enable && \
