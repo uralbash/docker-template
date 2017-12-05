@@ -9,7 +9,7 @@ MAINTAINER Dmitry Svintsov <root@uralbash.ru>
 ## Qt5
 WORKDIR /var
 
-ENV QT_VERSION v5.9.2
+ENV QT_VERSION v5.9.3
 RUN rm -rf qt5
 RUN git clone git://code.qt.io/qt/qt5.git
 RUN cd qt5 \
@@ -78,8 +78,8 @@ RUN . /opt/rh/devtoolset-3/enable && \
     make -j4 clean
 
 ## Run sshd
-CMD ["/usr/sbin/sshd", "-D"]
-EXPOSE 22
-
-ONBUILD CMD ["/usr/sbin/sshd", "-D"]
-ONBUILD EXPOSE 22
+# CMD ["/usr/sbin/sshd", "-D"]
+# EXPOSE 22
+#
+# ONBUILD CMD ["/usr/sbin/sshd", "-D"]
+# ONBUILD EXPOSE 22
