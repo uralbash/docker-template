@@ -76,10 +76,3 @@ RUN . /opt/rh/devtoolset-3/enable && \
 WORKDIR /var/qt5
 RUN . /opt/rh/devtoolset-3/enable && \
     make -j4 clean
-
-## Run sshd
-# CMD ["/usr/sbin/sshd", "-D"]
-# EXPOSE 22
-#
-# ONBUILD CMD ["/usr/sbin/sshd", "-D"]
-# ONBUILD EXPOSE 22

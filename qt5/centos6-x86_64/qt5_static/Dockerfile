@@ -6,21 +6,32 @@
 FROM uralbash/centos6-x86_64-gcc-cpp11:latest
 MAINTAINER Dmitry Svintsov <root@uralbash.ru>
 
+
+## Packages
+RUN yum install -y mesa-libGL-devel
+RUN yum install -y gstreamer-devel gstreamer-plugins-base-devel
+## FireBird
+RUN yum install -y epel-release
+RUN yum install -y firebird-libfbclient firebird-devel
+
 ## Qt5
 WORKDIR /var
-
-RUN yum install -y mesa-libGL-devel
+ENV QT_VERSION v5.9.3
 RUN rm -rf qt5
 RUN git clone git://code.qt.io/qt/qt5.git
 RUN cd qt5 \
-        && git checkout 5.8 \
+        && git checkout $QT_VERSION \
         && perl init-repository
 
+## Build Qt
 WORKDIR /var/qt5
+
+RUN echo "DEFINES+=SQLITE_ENABLE_JSON1" >> qtbase/src/plugins/sqldrivers/sqlite/sqlite.pro
+
 RUN PATH=/opt/gcc-4.8.2/bin/:$PATH   \
     . /opt/rh/devtoolset-3/enable && \
     ./configure                      \
-    --prefix=/opt/Qt-5.8/            \
+    --prefix=/opt/Qt-5/              \
     -static                          \
     -release                         \
     -opensource                      \
@@ -38,13 +49,21 @@ RUN PATH=/opt/gcc-4.8.2/bin/:$PATH   \
     . /opt/rh/devtoolset-3/enable && \
     make -j4
 RUN . /opt/rh/devtoolset-3/enable && \
-    make install
+    make -j4 install
+
+WORKDIR /var/qt5/qtvirtualkeyboard
+## Qt VirtualKeyboard
+RUN PATH=/opt/Qt-5/bin/:/opt/gcc-4.8.2/bin/:$PATH   \
+    . /opt/rh/devtoolset-3/enable && \
+    qmake CONFIG+="lang-ru_RU" \
+      PREFIX=/opt/Qt-5/
+RUN PATH=/opt/Qt-5/bin/:/opt/gcc-4.8.2/bin/:$PATH   \
+    . /opt/rh/devtoolset-3/enable && \
+    make -j4 install
 RUN . /opt/rh/devtoolset-3/enable && \
-    make clean
+    make -j4 clean
 
-## Run sshd
-CMD ["/usr/sbin/sshd", "-D"]
-EXPOSE 22
+WORKDIR /var/qt5
+RUN . /opt/rh/devtoolset-3/enable && \
+    make -j4 clean
 
-ONBUILD CMD ["/usr/sbin/sshd", "-D"]
-ONBUILD EXPOSE 22
