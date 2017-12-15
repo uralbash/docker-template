@@ -55,7 +55,7 @@ WORKDIR /var/qt5/qtvirtualkeyboard
 ## Qt VirtualKeyboard
 RUN PATH=/opt/Qt-5/bin/:/opt/gcc-4.8.2/bin/:$PATH   \
     . /opt/rh/devtoolset-3/enable && \
-    qmake CONFIG+="lang-ru_RU" \
+    qmake CONFIG+="lang-ru_RU" CONFIG+="static" \
       PREFIX=/opt/Qt-5/
 RUN PATH=/opt/Qt-5/bin/:/opt/gcc-4.8.2/bin/:$PATH   \
     . /opt/rh/devtoolset-3/enable && \
