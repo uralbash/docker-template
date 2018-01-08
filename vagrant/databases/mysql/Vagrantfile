@@ -1,0 +1,29 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+# vi: set nu :
+
+Vagrant.configure(2) do |config|
+
+  auth = {
+      MYSQL_ROOT_PASSWORD: "root",
+      MYSQL_USER: "root",
+      MYSQL_PASSWORD: "root"
+  }
+
+  build_args = []
+  create_args = [
+      '--volume=/etc/localtime:/etc/localtime:ro'
+  ]
+
+  config.vm.define 'mysql' do |mysql|
+    mysql.vm.provider 'docker' do |docker|
+      docker.image = "mysql"
+      docker.name = 'mysql'
+      docker.ports = ["3306:3306"]
+      docker.build_args = build_args
+      docker.create_args = create_args
+      docker.env = auth
+    end
+  end
+
+end

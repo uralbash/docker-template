@@ -1,0 +1,20 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+# vi: set nu :
+
+PROJECT_NAME = "mymemcached"
+
+Vagrant.configure(2) do |config|
+
+  config.vm.define 'memcached' do |memcached|
+    memcached.vm.provider 'docker' do |docker|
+      docker.image = "memcached:alpine"
+      docker.name = PROJECT_NAME
+      docker.ports = ["11211:11211"]
+      docker.create_args = [
+        '--volume=/etc/localtime:/etc/localtime:ro'
+      ]
+    end
+  end
+
+end
